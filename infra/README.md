@@ -228,3 +228,41 @@ terraform destroy -target module.vpc
 ```
 
 **Warning**: This will permanently delete all resources including EKS cluster, VPC, and monitoring configurations.
+
+## Git Repository Setup
+
+To set up the Git repository for this infrastructure code:
+
+1. Initialize Git repository (if not already done):
+
+   ```bash
+   git init
+   ```
+
+2. Add and commit all files:
+
+   ```bash
+   git add .
+   git commit -m "Initial commit of Terraform infrastructure"
+   ```
+
+3. If you encounter "remote origin already exists" error:
+
+   ```bash
+   # Check existing remotes
+   git remote -v
+   
+   # Remove existing origin remote
+   git remote remove origin
+   
+   # Add new origin remote
+   git remote add origin https://github.com/your-username/your-repo.git
+   
+   # Verify remote was added
+   git remote -v
+   ```
+
+4. Push to remote repository:
+
+   ```bash
+   git push -u origin main
