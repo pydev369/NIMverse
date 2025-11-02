@@ -2,7 +2,6 @@
 
 ---
 
-```markdown
 # 🧠⚡ NIMbleMind
 ### *Agentic Intelligence, Deployed at Cloud Speed*
 
@@ -152,4 +151,3 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 Would you like me to append a **short “Deployment Status & Badges” block** (GitHub Actions + ECR build + Cost Monitor badge) under the overview section next?  
 That adds live status visuals that impress hackathon judges immediately.
-```
