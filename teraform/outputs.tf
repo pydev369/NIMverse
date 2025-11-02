@@ -1,16 +1,26 @@
-output "ecr_repository_url" {
-  description = "ECR Repository URL for Docker pushes"
-  value       = aws_ecr_repository.nvidia_agent.repository_url
+output "existing_ecr_repository_url" {
+  description = "Existing ECR Repository URL"
+  value       = data.aws_ecr_repository.nvidia_agent.repository_url
 }
 
 output "eks_cluster_name" {
-  description = "EKS Cluster Name for kubeconfig"
+  description = "EKS Cluster Name"
   value       = aws_eks_cluster.nvidia_hackathon.name
 }
 
 output "eks_cluster_endpoint" {
   description = "EKS Cluster API Server Endpoint"
   value       = aws_eks_cluster.nvidia_hackathon.endpoint
+}
+
+output "eks_cluster_version" {
+  description = "EKS Cluster Version"
+  value       = aws_eks_cluster.nvidia_hackathon.version
+}
+
+output "s3_bucket_name" {
+  description = "S3 Bucket for Model Storage"
+  value       = aws_s3_bucket.nvidia_models.bucket
 }
 
 output "github_actions_access_key" {
@@ -26,22 +36,37 @@ output "github_actions_secret_key" {
 }
 
 output "vpc_id" {
-  description = "VPC ID created for EKS"
+  description = "VPC ID"
   value       = aws_vpc.eks_vpc.id
 }
 
-output "terraform_apply_command" {
-  description = "Command to run Terraform apply"
-  value       = "terraform apply -auto-approve"
+output "node_group_status" {
+  description = "EKS Node Group Status"
+  value       = aws_eks_node_group.gpu_nodes.status
 }
 
-output "next_steps" {
-  description = "Next steps after Terraform completes"
+output "nvidia_models" {
+  description = "NVIDIA Models to be deployed"
+  value       = var.nvidia_models
+}
+
+output "deployment_commands" {
+  description = "Useful deployment commands"
   value = <<EOT
-Next Steps:
-1. Save GitHub Actions credentials to GitHub Secrets
-2. Run: aws eks update-kubeconfig --region us-east-1 --name nvidia-hackathon-cluster
-3. Test EKS connection: kubectl get nodes
-4. Push code to trigger GitHub Actions deployment
+Configure kubectl:
+  aws eks update-kubeconfig --region ${var.aws_region} --name ${aws_eks_cluster.nvidia_hackathon.name}
+
+Check cluster status:
+  kubectl get nodes
+  kubectl get pods -A
+
+Deploy NVIDIA NIM:
+  kubectl apply -f kubernetes/nim-deployment.yaml
+
+GitHub Secrets to set:
+  AWS_ACCESS_KEY_ID: ${aws_iam_access_key.github_actions.id}
+  AWS_SECRET_ACCESS_KEY: [hidden]
+  ECR_REPOSITORY: ${var.existing_ecr_repository_name}
+  S3_BUCKET: ${aws_s3_bucket.nvidia_models.bucket}
 EOT
 }
